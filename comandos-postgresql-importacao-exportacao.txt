@@ -1,0 +1,104 @@
+gerar um sql do banco de origem e destino
+
+pg_dump -h prod.server.com -s -f original.sql cool-app-db
+pg_dump -h dev.server.com -s -f new.sql cool-app-db
+
+java -jar apgdiff-2.4.jar --ignore-start-with original.sql new.sql
+************ GERA SOMENTE OS SCRIPTS DO BANCO ************
+pg_dump -h localhost -U postgres -s -f c:\temp\bd1.sql bd1
+pg_dump -h localhost -U postgres -s -f c:\temp\bd2.sql bd2
+
+comparar os 2 arquivos
+java -jar apgdiff-2.4.jar --ignore-start-with bd1.sql bd2.sql >up.sql
+
+********* BACKUP DE TABELAS ESPECIFICAS ******************
+
+pg_dump -h localhost -U postgres -t "^ws*" -f c:/temp/bd_so_dados.sql bdvia
+**** somente script
+pg_dump -h localhost -U postgres -s -t "^ws*" -f c:/temp/bd_script_ws.sql bdvia
+
+********* RESTORE AS TABELAS ********************
+error ====>>>> postgres conversion between latin1 and win1252 is not supported
+**** Restore somente os dados, a tabela precisa estar criada
+SET PGCLIENTENCODING=utf-8
+psql -U postgres -d bdvia_banco_destino -f c:/temp/bd_so_dados.sql
+
+******** BACKUP DO BANCO GERADO PELO PAGADMIN ************
+pg_dump.exe --host localhost --port 5432 --username "postgres" --no-password 
+ --format custom --blobs --verbose --file "C:\ViaWebSmart\Backup\temp.backup" "bdvia"
+
+******** BACKUP DO BANCO INTEIRO **********
+pg_dump -Ft banco -f arquivo.sql.tar
+******** RESTORE SOMENTE UMA TABELA *******
+pg_restore -d banco -t tabela banco.sql.tar
+
+******** BACKUP SOMENTE DOS DADOS DA TABELA WSCTPAGAR ,   OPCAO -a *************
+pg_dump -h localhost -U postgres -a -t wstributo -f c:/temp/wstributo.sql bdvia
+
+---------------
+Atualizando o BD da quintel para ViawebStudio
+java -jar apgdiff-2.4.jar --ignore-start-with bd_quintel_script.sql bdvia_script.sql > update.sql
+
+
+java -jar apgdiff-2.6.0.jar --ignore-start-with bd_quintel.sql bdsmart.sql > update.sql
+nfentrai.nei_preco_unit_ger
+wsorci.ito_status
+wsparametro.atualizacao
+wsitensorcamento.ito_status
+
+COMMENT ON COLUMN public.wsnfentrai.nei_preco_unit_ger  IS '';
+COMMENT ON COLUMN public.wsorci.ito_status  IS '';
+COMMENT ON COLUMN public.wsparametro.atualizacao  IS '';
+COMMENT ON COLUMN public.wsorci.ito_status  IS '';
+COMMENT ON COLUMN public.wsitensorcamento.ito_status  IS '';
+
+pg_dump -h localhost -p5433 -U postgres -t "^ws*" -f c:/viaweb/bootstrap/migrando/bd_so_dados.sql producao
+open the cmd
+SET PGCLIENTENCODING=utf-8
+chcp 65001
+psql -h your.ip.addr.ess -U postgres
+---- Restaurar backup
+SET PGCLIENTENCODING=utf-8
+psql -U postgres -d teste-f c:/temp/bd_so_dados.sql
+psql -U postgres -d bdvia-f c:/temp/bvia.sql
+
+CREATE DATABASE bdvia
+    WITH 
+    OWNER = postgres
+    TEMPLATE = template0
+    ENCODING = 'LATIN1'
+    LC_COLLATE = 'C'
+    LC_CTYPE = 'C'
+    CONNECTION LIMIT = -1;
+pg_dump -h localhost -U postgres -s -t "^ws*" -f c:/viaweb/script/bd_script_257.sql viaweb25
+restore
+psql -U postgres -p5433 -d bdsmart -f c:/viaweb/bootstrap/backup/bd_so_dados.sql
+Executar um script com log
+psql -p5433 -U postgres -d bdsmart -f c:/viaweb/x.sql >log.txt
+
+pg_restore.exe -i -h localhost -p 5432 -U postgres -d bdteste -v "d:\ViaWeb\backup\bdvia.backup"
+-------------------
+pg_dump -h localhost -p5432 -U postgres -s -t "^ws*" -f c:/temp/sapao_so_dados.sql sapao
+
+pg_dump -h localhost -p5432 -U postgres -t "^ws*" -f c:/temp/sapao_so_dados.sql sapao
+psql -U postgres -p5432 -d bdsmart -f c:/temp/sapao_so_dados.sql
+
+backup das fr's
+pg_dump -h localhost -U postgres -t "^fr*" -f c:/temp/backup/bd_so_fr.sql bdvia
+psql -U postgres -p5432 -d bdvia -f c:/temp/backup/bd_so_dados.sql
+
+Restaurar tabelas frs
+psql -U postgres -p5433 -d bdsmart -f c:/temp/fr_bdsmart/fr_bdsmart.sql
+
+
+psql -U postgres -d producao -f c:/temp/bd_so_dados.sql
+
+
+
+rem java -jar apgdiff-2.6.0.jar --ignore-start-with destino.sql origem.sql > update-quintel.sql
+
+rem "C:\Program Files\PostgreSQL\11\bin\"pg_dump -h localhost -U postgres -s -t "^ws*" -f c:/temp/compare/ws01.sql bdsmart
+rem "C:\Program Files\PostgreSQL\11\bin\"pg_dump -h localhost -U postgres -s -t "^ws*" -f c:/temp/compare/ws.sql bdvia
+java -jar apgdiff-2.6.0.jar --ignore-start-with max.sql quintel.sql > ws.sql
+
+
